@@ -5,7 +5,8 @@ namespace OrderSystem.Services
 {
     public interface IProductService
     {
-        IEnumerable<Product> SearchProductsByName(string substring);
+        IEnumerable<Product> SearchProductsByName(string? substring);
+        Product? GetProductById(int id);
     }
 }
 

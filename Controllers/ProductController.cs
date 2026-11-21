@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using OrderSystem.Data;
 using OrderSystem.Models;
 using OrderSystem.Services;
@@ -18,21 +17,14 @@ namespace OrderSystem.Controllers
             _productService = productService;
         }
 
-        public IActionResult Index(string searchString)
+        public IActionResult Index(string? searchString)
         {
-            IEnumerable<Product> products;
-
             if (!string.IsNullOrEmpty(searchString))
             {
-                products = _productService.SearchProductsByName(searchString);
-                ViewBag.SearchString = searchString; 
-            }
-            else
-            {
-                products = _dbContext.Products.Include(p => p.Category).ToList();
+                ViewBag.SearchString = searchString;
             }
 
-            return View(products);
+            return View(_productService.SearchProductsByName(searchString));
         }
 
         public IActionResult Create()
@@ -56,9 +48,7 @@ namespace OrderSystem.Controllers
 
         public IActionResult Details(int id)
         {
-            var product = _dbContext.Products
-                .Include(p => p.Category) // Include related data, if necessary
-                .FirstOrDefault(p => p.Id == id);
+            var product = _productService.GetProductById(id);
 
             if (product == null)
             {

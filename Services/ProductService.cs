@@ -12,7 +12,7 @@ namespace OrderSystem.Services
             _dbContext = dbContext;
         }
 
-        public IEnumerable<Product> SearchProductsByName(string substring)
+        public IEnumerable<Product> SearchProductsByName(string? substring)
         {
             if (string.IsNullOrWhiteSpace(substring))
             {
@@ -24,6 +24,13 @@ namespace OrderSystem.Services
                     .AsEnumerable() 
                     .Where(p => p.Name.Contains(substring, System.StringComparison.OrdinalIgnoreCase))
                     .ToList();
+        }
+
+        public Product? GetProductById(int id)
+        {
+            return _dbContext.Products
+                .Include(p => p.Category)
+                .FirstOrDefault(p => p.Id == id);
         }
 
         public IEnumerable<Product> GetProductsByCategory(int categoryId)
