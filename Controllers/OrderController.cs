@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OrderSystem.Data;
 using OrderSystem.Models;
-using System.Security.Claims;
 
 namespace OrderSystem.Controllers
 {
@@ -14,6 +13,16 @@ namespace OrderSystem.Controllers
         public OrderController(ProductDbContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public IActionResult Index()
+        {
+            var orders = _dbContext.Orders
+                .Include(order => order.Items)
+                .OrderByDescending(order => order.Id)
+                .ToList();
+
+            return View(orders);
         }
 
         public IActionResult Create()
