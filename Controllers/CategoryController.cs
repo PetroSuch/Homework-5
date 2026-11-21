@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OrderSystem.Data;
-using OrderSystem.Services;
+using OrderSystem.Models;
 
 namespace OrderSystem.Controllers
 {
@@ -16,7 +16,7 @@ namespace OrderSystem.Controllers
             
         }
 
-        public IActionResult Index(string sortOrder)
+        public IActionResult Index(string? sortOrder)
         {
             // Set up the current sort order for toggling
             ViewBag.NameSortParam = sortOrder == "name_desc" ? "name_asc" : "name_desc";
@@ -24,10 +24,10 @@ namespace OrderSystem.Controllers
             // Fetch categories and include the count of associated products
             var categories = _dbContext.Categories
                 .Include(c => c.Products)
-                .Select(c => new
+                .Select(c => new CategoryListItem
                 {
-                    c.Id,
-                    c.Name,
+                    Id = c.Id,
+                    Name = c.Name,
                     ProductCount = c.Products.Count
                 });
 
